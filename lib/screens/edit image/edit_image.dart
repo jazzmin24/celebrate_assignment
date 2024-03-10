@@ -1,12 +1,14 @@
 import 'dart:io';
 import 'dart:typed_data';
-
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:celebrate_assignment/screens/home/home_screen.dart';
 import 'package:celebrate_assignment/widget/prop_widget.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:image_cropper/image_cropper.dart'; 
+import 'package:image_cropper/image_cropper.dart';
 
 class EditImageScreen extends StatefulWidget {
   final File imageFile;
@@ -19,6 +21,8 @@ class EditImageScreen extends StatefulWidget {
 
 class _EditImageScreenState extends State<EditImageScreen> {
   double _rotationAngle = 0;
+  bool _flippedHorizontally = false;
+  bool _flippedVertically = false;
   String selectedFrame = '';
 
   Future<void> _showCropDialog(BuildContext context) async {
@@ -45,7 +49,7 @@ class _EditImageScreenState extends State<EditImageScreen> {
                   ),
                   Text(
                     'Upload Image',
-                    style: TextStyle(
+                    style: GoogleFonts.diphylleia(
                       color: const Color.fromARGB(255, 115, 115, 115),
                       fontSize: 20.sp,
                     ),
@@ -53,29 +57,6 @@ class _EditImageScreenState extends State<EditImageScreen> {
                   SizedBox(
                     height: 5.h,
                   ),
-                  // selectedFrame.isNotEmpty
-                  //     ? Stack(
-                  //         children: [
-                  //           Image.asset(
-                  //             selectedFrame,
-                  //             height: 250.h,
-                  //           ),
-                  //           Positioned.fill(
-                  //             child: ClipRRect(
-                  //               borderRadius: BorderRadius.circular(12),
-                  //               child: Image.file(
-                  //                 widget.imageFile,
-                  //                 fit: BoxFit.cover,
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         ],
-                  //       )
-                  //     : Image.file(
-                  //         widget.imageFile,
-                  //         height: 250.h,
-                  //       ),
-
                   selectedFrame.isNotEmpty
                       ? Image.asset(
                           selectedFrame,
@@ -100,8 +81,8 @@ class _EditImageScreenState extends State<EditImageScreen> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                                color:
-                                    const Color.fromARGB(255, 179, 179, 179)),
+                              color: const Color.fromARGB(255, 179, 179, 179),
+                            ),
                           ),
                           child: const Padding(
                             padding: EdgeInsets.all(10),
@@ -184,6 +165,33 @@ class _EditImageScreenState extends State<EditImageScreen> {
     );
   }
 
+  // Method to crop the image using image_cropper package
+  // Future<void> _cropImage() async {
+  //   CroppedFile? croppedFile = await ImageCropper().cropImage(
+  //     sourcePath: widget.imageFile.path,
+  //     aspectRatioPresets: [
+  //       CropAspectRatioPreset.square,
+  //       CropAspectRatioPreset.ratio3x2,
+  //       CropAspectRatioPreset.original,
+  //       CropAspectRatioPreset.ratio4x3,
+  //       CropAspectRatioPreset.ratio16x9
+  //     ],
+  //     androidUiSettings: AndroidUiSettings(
+  //         toolbarTitle: 'Crop Image',
+  //         toolbarColor: Colors.deepOrange,
+  //         toolbarWidgetColor: Colors.white,
+  //         initAspectRatio: CropAspectRatioPreset.original,
+  //         lockAspectRatio: false),
+  //     iosUiSettings: IOSUiSettings(
+  //       minimumAspectRatio: 1.0,
+  //     ),
+  //   );
+
+  //   if (croppedFile != null) {
+  //     // Do something with the cropped image file
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -216,14 +224,74 @@ class _EditImageScreenState extends State<EditImageScreen> {
               Icons.flip,
               color: Colors.white,
             ),
-            onPressed: () {
-              // Implement image flipping logic here
+            onPressed: () async {
+              await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return Stack(
+                    children: <Widget>[
+                      Positioned(
+                        top: -20,
+                        right: -90,
+                        child: AlertDialog(
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero,
+                          ),
+                          backgroundColor: Colors.black,
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 2.h,
+                            horizontal: 20.w,
+                          ),
+                          content: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _flippedHorizontally =
+                                        !_flippedHorizontally;
+                                  });
+                                  Navigator.pop(context);
+                                },
+                                child: Text(
+                                  'Flip Horizontally',
+                                  style: TextStyle(
+                                    fontSize: 18.sp,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _flippedVertically = !_flippedVertically;
+                                  });
+                                  Navigator.pop(context);
+                                },
+                                child: Text(
+                                  'Flip Vertically',
+                                  style: TextStyle(
+                                    fontSize: 18.sp,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              );
             },
           ),
           TextButton(
             onPressed: () {
               Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (_) => const HomeScreen()));
+                MaterialPageRoute(builder: (_) => const HomeScreen()),
+              );
               Future.microtask(() {
                 _showCropDialog(context);
               });
@@ -234,14 +302,18 @@ class _EditImageScreenState extends State<EditImageScreen> {
                 color: Colors.white,
               ),
             ),
-          )
+          ),
         ],
       ),
       body: Center(
-        child: Transform.rotate(
-          angle: _rotationAngle *
-              (3.14159265359 / 180), // Convert degrees to radians
-          child: Image.file(widget.imageFile),
+        child: Transform(
+          alignment: Alignment.center,
+          transform: Matrix4.rotationY(_flippedHorizontally ? math.pi : 0)
+            ..rotateZ(_flippedVertically ? math.pi : 0),
+          child: Transform.rotate(
+            angle: _rotationAngle * (math.pi / 180),
+            child: Image.file(widget.imageFile),
+          ),
         ),
       ),
     );

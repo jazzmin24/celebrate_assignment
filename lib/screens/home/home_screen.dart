@@ -64,11 +64,11 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               title: Center(
                 child: Text(
-                  'Add Image/Icon',
-                  style: GoogleFonts.cedarvilleCursive(
+                  'Add Image / Icon',
+                  style: GoogleFonts.diphylleia(
                     color: Color.fromARGB(255, 115, 115, 115),
                   ),
-                  // style: GoogleFonts.nunito(
+                  // style: GoogleFonts.nunito(     quintessential charm gowunBatang
                   //   color: const Color.fromARGB(255, 115, 115, 115),
                   // ),
                 ),
@@ -89,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Text(
                   'Upload Image',
-                  style: TextStyle(
+                  style: GoogleFonts.diphylleia(
                       color: Color.fromARGB(255, 115, 115, 115),
                       fontSize: 18.sp),
                 ),

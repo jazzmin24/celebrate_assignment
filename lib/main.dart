@@ -10,9 +10,7 @@ void main() {
     DevicePreview(
       enabled: !kReleaseMode,
       builder: (BuildContext context) {
-        return MaterialApp(
-          home: MyApp(),
-        );
+        return MyApp();
       },
     ),
   );
