@@ -1,5 +1,6 @@
 import 'package:celebrate_assignment/screens/home/home_screen.dart';
 import 'package:celebrate_assignment/screens/splash/splash_screen.dart';
+import 'package:celebrate_assignment/test.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: HomeScreen(),
+        home: Test(),
       ),
     );
   }

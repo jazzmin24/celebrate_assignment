@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:celebrate_assignment/screens/edit%20image/edit_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,7 +19,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> getImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
@@ -35,6 +33,43 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     });
   }
+
+  // Future<void> getImage() async {
+  //   final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+  //   if (pickedFile != null) {
+  //     CroppedFile? croppedFile = await ImageCropper().cropImage(
+  //       sourcePath: pickedFile.path,
+  //       aspectRatioPresets: [
+  //         CropAspectRatioPreset.square,
+  //         CropAspectRatioPreset.ratio3x2,
+  //         CropAspectRatioPreset.original,
+  //         CropAspectRatioPreset.ratio4x3,
+  //         CropAspectRatioPreset.ratio16x9
+  //       ],
+  //        androidUiSettings: AndroidUiSettings(
+  //         toolbarTitle: 'Crop Image',
+  //         toolbarColor: Colors.deepOrange,
+  //         toolbarWidgetColor: Colors.white,
+  //         initAspectRatio: CropAspectRatioPreset.original,
+  //         lockAspectRatio: false,
+  //       ),
+  //       iosUiSettings: IOSUiSettings(
+  //         minimumAspectRatio: 1.0,
+  //       ),
+  //     );
+  //     if (croppedFile != null) {
+  //       _image = croppedFile as File?;
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => EditImageScreen(imageFile: _image!),
+  //         ),
+  //       );
+  //     }
+  //   } else {
+  //     print('No image selected.');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

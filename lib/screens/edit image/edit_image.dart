@@ -2,13 +2,12 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:celebrate_assignment/screens/home/home_screen.dart';
 import 'package:celebrate_assignment/widget/prop_widget.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_cropper/image_cropper.dart'; 
-import 'package:image_cropper/image_cropper.dart';
 
 class EditImageScreen extends StatefulWidget {
   final File imageFile;
@@ -58,10 +57,70 @@ class _EditImageScreenState extends State<EditImageScreen> {
                     height: 5.h,
                   ),
                   selectedFrame.isNotEmpty
-                      ? Image.asset(
-                          selectedFrame,
-                          height: 250.h,
+                      ? Container(
+                          width:
+                              250.h,
+                          height:
+                              250.h, 
+                          child: ClipOval(
+                            child: Stack(
+                              children: [
+                                Image.file(
+                                  widget.imageFile,
+                                  fit: BoxFit
+                                      .cover,
+                                  colorBlendMode: BlendMode
+                                      .srcOver, 
+                                  color: Colors.white.withOpacity(
+                                      0),
+                                ),
+                                Positioned.fill(
+                                  child: BackdropFilter(
+                                    filter: ImageFilter.blur(
+                                        sigmaX: 10,
+                                        sigmaY:
+                                            10),
+                                    child: Container(
+                                      color: Colors
+                                          .transparent, 
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         )
+
+                      // ClipOval(
+                      //     child: Container(
+                      //       width:
+                      //           250.h,
+                      //       height: 250
+                      //           .h,
+                      //       child: Image.file(
+                      //         widget.imageFile,
+                      //         fit: BoxFit
+                      //             .cover,
+                      //       ),
+                      //     ),
+                      //   )
+
+                      // Container(
+                      //     width: 200,
+                      //     height: 200,
+                      //     decoration: BoxDecoration(
+                      //       shape: BoxShape.circle,
+                      //     ),
+                      //     child: ClipOval(
+                      //       child: Image.file(
+                      //         widget.imageFile,
+                      //         height: 200, // Match the height of the container
+                      //         width: 200, // Match the width of the container
+                      //         fit: BoxFit
+                      //             .cover, // Ensure the entire image is visible within the circular shape
+                      //       ),
+                      //     ),
+                      //   )
                       : Image.file(
                           widget.imageFile,
                           height: 250.h,
@@ -164,33 +223,6 @@ class _EditImageScreenState extends State<EditImageScreen> {
       },
     );
   }
-
-  // Method to crop the image using image_cropper package
-  // Future<void> _cropImage() async {
-  //   CroppedFile? croppedFile = await ImageCropper().cropImage(
-  //     sourcePath: widget.imageFile.path,
-  //     aspectRatioPresets: [
-  //       CropAspectRatioPreset.square,
-  //       CropAspectRatioPreset.ratio3x2,
-  //       CropAspectRatioPreset.original,
-  //       CropAspectRatioPreset.ratio4x3,
-  //       CropAspectRatioPreset.ratio16x9
-  //     ],
-  //     androidUiSettings: AndroidUiSettings(
-  //         toolbarTitle: 'Crop Image',
-  //         toolbarColor: Colors.deepOrange,
-  //         toolbarWidgetColor: Colors.white,
-  //         initAspectRatio: CropAspectRatioPreset.original,
-  //         lockAspectRatio: false),
-  //     iosUiSettings: IOSUiSettings(
-  //       minimumAspectRatio: 1.0,
-  //     ),
-  //   );
-
-  //   if (croppedFile != null) {
-  //     // Do something with the cropped image file
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
